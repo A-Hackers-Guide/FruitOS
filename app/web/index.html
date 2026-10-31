@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FruitOS</title>
+<link rel="stylesheet" href="style.css">
+<script type="importmap">{"imports": {"three": "./vendor/three.module.min.js"}}</script>
+</head>
+<body>
+<header>
+  <div class="brand"><span class="logo">●</span> FruitOS <small>a fruit fly's brain, alive</small></div>
+  <div class="status">
+    <span id="behaviour" class="pill">waking up…</span>
+    <span id="brainclock" class="muted"></span>
+  </div>
+  <div class="counts muted" id="counts"></div>
+</header>
+
+<main>
+  <section id="stage">
+    <canvas id="brain"></canvas>
+    <div id="fly-card">
+      <svg id="fly" viewBox="-60 -60 120 120" aria-label="the fly">
+        <g id="fly-body">
+          <ellipse class="wing" cx="-14" cy="6" rx="10" ry="26" transform="rotate(-18 -14 6)"/>
+          <ellipse class="wing" cx="14" cy="6" rx="10" ry="26" transform="rotate(18 14 6)"/>
+          <g class="legs">
+            <path d="M-6 -6 L-22 -16 M-6 2 L-24 2 M-6 10 L-22 22 M6 -6 L22 -16 M6 2 L24 2 M6 10 L22 22"/>
+          </g>
+          <ellipse class="thorax" cx="0" cy="-2" rx="9" ry="11"/>
+          <ellipse class="abdomen" cx="0" cy="18" rx="8" ry="13"/>
+          <circle class="head" cx="0" cy="-17" r="7"/>
+          <circle class="eye" cx="-5" cy="-19" r="3.5"/><circle class="eye" cx="5" cy="-19" r="3.5"/>
+        </g>
+      </svg>
+      <div id="fly-caption">resting</div>
+    </div>
+    <div id="senses" role="toolbar" aria-label="Give the fly a sensation"></div>
+    <div id="legend"></div>
+    <div id="hint" class="muted">drag to spin · scroll to zoom · click a dot to inspect a neuron</div>
+  </section>
+
+  <aside>
+    <nav id="tabs">
+      <button data-tab="talk" class="on">Talk</button>
+      <button data-tab="learn">Learn</button>
+      <button data-tab="explore">Explore</button>
+      <button data-tab="about">About</button>
+    </nav>
+
+    <div class="tab on" id="tab-talk">
+      <div id="chat"></div>
+      <div id="suggest"></div>
+      <form id="ask"><input id="q" autocomplete="off" placeholder="Ask the fly anything about its brain…"><button>Send</button></form>
+    </div>
+
+    <div class="tab" id="tab-learn">
+      <div id="lesson-list"></div>
+      <div id="lesson"></div>
+    </div>
+
+    <div class="tab" id="tab-explore">
+      <input id="search" placeholder="Search neuron types (e.g. DNp01, MDN, KC, LPLC2)…">
+      <div id="results"></div>
+      <div id="neuron"></div>
+    </div>
+
+    <div class="tab" id="tab-about">
+      <h3>About FruitOS</h3>
+      <p>FruitOS runs the complete wiring diagram of a fruit fly's central nervous system as a live
+        simulation. The fly's behaviour on screen is decided only by its own command neurons.</p>
+      <p><b>Brain data:</b> <span id="credit"></span>. Published 2026 in <i>Cell</i>
+        ("Sexual dimorphism in the complete <i>Drosophila</i> male central nervous system connectome");
+        data at male-cns.janelia.org.</p>
+      <p><b>Model:</b> leaky integrate-and-fire network after Shiu et al. 2024 (<i>Nature</i>), recalibrated
+        for this dataset, with spike-frequency adaptation. Ask the fly "how does this simulation work?"
+        for its limits.</p>
+      <p><b>Software:</b> FruitOS is free software (MIT). Built on Arch Linux; not affiliated with or endorsed by
+        Arch Linux. 3D rendering by three.js (MIT).</p>
+    </div>
+  </aside>
+</main>
+<script type="module" src="app.js"></script>
+</body>
+</html>

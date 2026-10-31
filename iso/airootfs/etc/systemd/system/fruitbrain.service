@@ -1,0 +1,24 @@
+[Unit]
+Description=FruitBrain - the fruit fly connectome, running live
+After=local-fs.target
+
+[Service]
+User=learner
+WorkingDirectory=/opt/fruitos/app
+Environment=FRUITOS_DATA=/opt/fruitos/data
+Environment=FRUITOS_CPU_SHARE=0.5
+Environment=OMP_NUM_THREADS=1
+Environment=OPENBLAS_NUM_THREADS=1
+ExecStart=/usr/bin/python -m fruitbrain.server
+Restart=on-failure
+# keep the brain polite: at most one CPU core and 2 GB of RAM
+CPUQuota=100%
+MemoryMax=2G
+Nice=5
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=read-only
+PrivateTmp=yes
+
+[Install]
+WantedBy=multi-user.target

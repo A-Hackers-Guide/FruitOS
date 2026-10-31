@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Wait for the fly's brain to wake up, then show the learning app full-screen.
+for _ in $(seq 1 120); do
+  curl -sf http://127.0.0.1:8642/api/info >/dev/null && break
+  sleep 1
+done
+exec firefox --kiosk --new-instance http://127.0.0.1:8642

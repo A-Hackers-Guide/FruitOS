@@ -1,0 +1,17 @@
+# FruitOS packages (merged with the archiso boot essentials by iso/build.sh)
+base
+linux
+linux-firmware
+mkinitcpio
+mkinitcpio-archiso
+syslinux
+grub
+python
+python-numpy
+python-scipy
+cage
+firefox
+mesa
+ttf-dejavu
+noto-fonts-emoji
+curl

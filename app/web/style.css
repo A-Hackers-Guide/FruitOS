@@ -1,0 +1,90 @@
+:root {
+  --bg: #0b0d12; --panel: #12151c; --line: #232838; --text: #e6e8ee; --muted: #8b91a3;
+  --accent: #ff6b4a; --accent2: #ffd166; --ok: #4ade80;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text);
+  font: 14px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, "DejaVu Sans", sans-serif; }
+body { display: flex; flex-direction: column; overflow: hidden; }
+.muted { color: var(--muted); }
+header { display: flex; align-items: center; gap: 20px; padding: 10px 16px; border-bottom: 1px solid var(--line); }
+.brand { font-weight: 700; font-size: 18px; }
+.brand small { font-weight: 400; color: var(--muted); font-size: 12px; margin-left: 6px; }
+.logo { color: var(--accent); }
+.status { display: flex; align-items: center; gap: 10px; }
+.pill { padding: 3px 10px; border-radius: 999px; background: #1e2433; font-weight: 600; }
+.pill.escape { background: var(--accent); color: #111; }
+.pill.backward, .pill.forward, .pill.turn { background: var(--accent2); color: #111; }
+.counts { margin-left: auto; font-size: 12px; }
+
+main { flex: 1; display: grid; grid-template-columns: 1fr 400px; min-height: 0; }
+#stage { position: relative; min-width: 0; }
+#brain { width: 100%; height: 100%; display: block; cursor: grab; }
+#hint { position: absolute; top: 10px; left: 14px; font-size: 12px; }
+#legend { position: absolute; top: 34px; left: 14px; display: flex; flex-direction: column; align-items: flex-start; gap: 3px; font-size: 12px; }
+#legend label { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+#legend i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+
+#fly-card { position: absolute; right: 14px; top: 14px; width: 150px; text-align: center;
+  background: rgba(18,21,28,.85); border: 1px solid var(--line); border-radius: 12px; padding: 8px; }
+#fly { width: 110px; height: 110px; overflow: visible; }
+#fly .wing { fill: rgba(200,220,255,.25); stroke: rgba(200,220,255,.5); }
+#fly .legs path { stroke: #c9b79c; stroke-width: 1.6; fill: none; }
+#fly .thorax, #fly .abdomen { fill: #b08a5a; }
+#fly .head { fill: #9a7448; }
+#fly .eye { fill: #d0312d; }
+#fly-body { transition: transform .5s ease; }
+#fly.forward #fly-body { animation: fwd .5s ease-in-out infinite alternate; }
+#fly.backward #fly-body { animation: back .5s ease-in-out infinite alternate; }
+#fly.turn-left #fly-body { transform: rotate(-35deg); }
+#fly.turn-right #fly-body { transform: rotate(35deg); }
+#fly.escape #fly-body { animation: jump .45s ease-out infinite; }
+#fly.escape .wing { animation: buzz .05s linear infinite alternate; }
+@keyframes fwd { to { transform: translateY(-8px); } }
+@keyframes back { to { transform: translateY(8px); } }
+@keyframes jump { 0% { transform: translateY(0) scale(1); } 60% { transform: translateY(-26px) scale(1.15); } 100% { transform: translateY(0) scale(1); } }
+@keyframes buzz { to { opacity: .3; } }
+#fly-caption { font-size: 12px; color: var(--muted); }
+
+#senses { position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; max-width: 95%; }
+#senses button { background: rgba(30,36,51,.9); color: var(--text); border: 1px solid var(--line);
+  border-radius: 10px; padding: 8px 12px; cursor: pointer; font: inherit; }
+#senses button:hover { border-color: var(--accent); }
+#senses button.feeling { background: var(--accent); color: #111; }
+
+aside { border-left: 1px solid var(--line); background: var(--panel); display: flex; flex-direction: column; min-height: 0; }
+#tabs { display: flex; border-bottom: 1px solid var(--line); }
+#tabs button { flex: 1; background: none; border: 0; color: var(--muted); padding: 10px; font: inherit; cursor: pointer; border-bottom: 2px solid transparent; }
+#tabs button.on { color: var(--text); border-bottom-color: var(--accent); }
+.tab { display: none; flex: 1; min-height: 0; overflow: auto; padding: 12px; }
+.tab.on { display: flex; flex-direction: column; }
+#tab-talk { padding: 0; }
+#chat { flex: 1; overflow: auto; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+.msg { padding: 9px 12px; border-radius: 12px; max-width: 92%; white-space: pre-wrap; }
+.msg.fly { background: #1b2030; align-self: flex-start; }
+.msg.fly::before { content: "🪰 Fly"; display: block; font-size: 11px; color: var(--accent2); margin-bottom: 2px; }
+.msg.me { background: #2a2f45; align-self: flex-end; }
+#suggest { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 12px 8px; }
+#suggest button, .chip { background: #1b2030; border: 1px solid var(--line); color: var(--text); border-radius: 999px; padding: 4px 10px; font: inherit; font-size: 12px; cursor: pointer; }
+#ask { display: flex; gap: 6px; padding: 10px 12px; border-top: 1px solid var(--line); }
+input { flex: 1; background: #0e1118; border: 1px solid var(--line); color: var(--text); border-radius: 8px; padding: 9px 10px; font: inherit; }
+#ask button, .btn { background: var(--accent); color: #111; border: 0; border-radius: 8px; padding: 0 14px; font: inherit; font-weight: 600; cursor: pointer; }
+#lesson-list button { display: block; width: 100%; text-align: left; background: none; border: 1px solid var(--line); color: var(--text); border-radius: 8px; padding: 8px 10px; margin-bottom: 6px; cursor: pointer; font: inherit; }
+#lesson-list button.done::after { content: " ✓"; color: var(--ok); }
+#lesson h3 { margin: 12px 0 6px; }
+.quiz button { display: block; width: 100%; text-align: left; margin: 6px 0; background: #1b2030; color: var(--text); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; cursor: pointer; font: inherit; }
+.quiz button.right { border-color: var(--ok); background: #143322; }
+.quiz button.wrong { border-color: var(--accent); background: #3a1a14; }
+#results .chip { margin: 3px; display: inline-block; }
+#neuron table { width: 100%; border-collapse: collapse; font-size: 13px; }
+#neuron td { padding: 3px 4px; border-bottom: 1px solid var(--line); vertical-align: top; }
+#neuron td:first-child { color: var(--muted); width: 40%; }
+#neuron a { color: var(--accent2); cursor: pointer; }
+
+@media (max-width: 900px) {
+  main { grid-template-columns: 1fr; grid-template-rows: 55% 45%; }
+  aside { border-left: 0; border-top: 1px solid var(--line); }
+  #fly-card { width: 110px; } #fly { width: 80px; height: 80px; }
+}
+#search { flex: none; margin-bottom: 8px; }

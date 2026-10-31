@@ -1,0 +1,58 @@
+name: Release ISO
+# Push a tag like v0.1.0 to build FruitOS and publish the ISO as a GitHub Release.
+# Built ISOs live only in Releases, never in the source tree.
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  iso:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@v4
+      - name: Free disk space on the runner
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL
+          df -h /
+      - name: Build the ISO inside Arch Linux
+        run: |
+          ver="${GITHUB_REF_NAME#v}"
+          [[ "$GITHUB_REF" == refs/tags/* ]] || ver="dev-${GITHUB_SHA::7}"
+          docker run --rm --privileged -e FRUITOS_VERSION="$ver" -v "$PWD:/src" archlinux:latest bash /src/iso/build.sh
+      - name: Check size (GitHub release files must be under 2 GiB)
+        run: |
+          for f in out/*.iso; do
+            s=$(stat -c %s "$f"); echo "$f: $((s / 1048576)) MiB"
+            [ "$s" -lt 2147483648 ]
+          done
+      - name: Release notes
+        run: |
+          cat > notes.md <<NOTES
+          FruitOS ${GITHUB_REF_NAME}: a live Linux system (based on Arch Linux) running the complete
+          male fruit fly central nervous system connectome as a brain you can talk to and learn from.
+
+          * Boot: GRUB on UEFI (legacy-BIOS fallback via syslinux). Write the ISO to a USB stick or open it in a VM.
+          * Needs: x86_64 PC or VM, 4 GB RAM minimum (8 GB recommended). No internet needed.
+          * Verify: \`sha256sum -c fruitos-*.iso.sha256\`
+
+          Brain data: MaleCNS v1.0, Janelia FlyEM, Google and partners, licensed CC BY 4.0
+          (https://male-cns.janelia.org). FruitOS is not affiliated with Arch Linux, Janelia or Google.
+          NOTES
+      - name: Publish release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            out/*.iso
+            out/*.sha256
+          body_path: notes.md
+      - name: Keep test build for 3 days
+        if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: fruitos-dev-iso
+          path: out/
+          retention-days: 3
