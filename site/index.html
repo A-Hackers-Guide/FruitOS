@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FruitOS</title>
+<meta name="description" content="A live Linux OS powered by a real fruit fly brain: 165,122 neurons you can watch, talk to and learn from.">
+<script type="importmap">{"imports": {"three": "./vendor/three.module.min.js"}}</script>
+<style>
+  :root { --bg:#0b0d12; --panel:#12151c; --line:#232838; --text:#e6e8ee; --muted:#8b91a3; --accent:#ff6b4a; --accent2:#ffd166; color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
+  a { color: var(--accent2); }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 16px; }
+  nav { display:flex; align-items:center; gap:18px; padding:16px 0; }
+  nav .brand { font-weight:800; font-size:20px; } nav .brand span { color:var(--accent); }
+  nav a { color:var(--muted); text-decoration:none; } nav a:hover { color:var(--text); }
+  nav .grow { flex:1; }
+  .hero { display:grid; grid-template-columns: 1.1fr 1fr; gap:32px; align-items:center; padding:24px 0 8px; }
+  h1 { font-size: clamp(34px, 6vw, 56px); line-height:1.05; margin:0 0 16px; letter-spacing:-0.02em; }
+  h1 em { font-style:normal; color:var(--accent); }
+  .lead { font-size:19px; color:#c7cbd6; margin:0 0 24px; }
+  .btns { display:flex; gap:10px; flex-wrap:wrap; }
+  .btn { display:inline-block; padding:12px 20px; border-radius:10px; font-weight:700; text-decoration:none; }
+  .btn.primary { background:var(--accent); color:#111; } .btn.ghost { border:1px solid var(--line); color:var(--text); }
+  .small { font-size:13px; color:var(--muted); margin-top:10px; }
+  #viewer { position:relative; aspect-ratio: 1 / 1; border:1px solid var(--line); border-radius:16px; overflow:hidden; background:#07090d; }
+  #viewer canvas { width:100%; height:100%; display:block; cursor:grab; }
+  #viewer .cap { position:absolute; left:12px; bottom:10px; font-size:12px; color:var(--muted); pointer-events:none; }
+  .stats { display:grid; grid-template-columns: repeat(3,1fr); gap:12px; margin:40px 0; }
+  .stat { background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:18px; }
+  .stat b { display:block; font-size:28px; } .stat span { color:var(--muted); font-size:14px; }
+  h2 { font-size:28px; margin:56px 0 16px; }
+  .grid { display:grid; grid-template-columns: repeat(3, 1fr); gap:14px; }
+  .card { background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:18px; }
+  .card h3 { margin:0 0 6px; font-size:17px; } .card p { margin:0; color:#c7cbd6; font-size:15px; }
+  .shot { width:100%; border-radius:14px; border:1px solid var(--line); display:block; }
+  table { width:100%; border-collapse:collapse; font-size:15px; }
+  td, th { text-align:left; padding:8px 10px; border-bottom:1px solid var(--line); vertical-align:top; }
+  th { color:var(--muted); font-weight:600; }
+  code { background:#1b2030; padding:2px 6px; border-radius:6px; font-size:14px; }
+  pre { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:14px; overflow:auto; font-size:14px; }
+  footer { margin:64px 0 32px; color:var(--muted); font-size:14px; border-top:1px solid var(--line); padding-top:20px; }
+  @media (max-width: 800px) { .hero, .grid { grid-template-columns: 1fr; } .stats { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <div class="brand"><span>●</span> FruitOS</div>
+    <div class="grow"></div>
+    <a href="#features">Features</a>
+    <a href="#science">The science</a>
+    <a href="#get">Download</a>
+    <a href="https://github.com/A-Hackers-Guide/FruitOS">GitHub</a>
+  </nav>
+
+  <section class="hero">
+    <div>
+      <h1>An operating system with a <em>real fly's brain</em> in charge.</h1>
+      <p class="lead">FruitOS boots into a live simulation of the complete wiring diagram of a fruit fly's
+        nervous system. Watch it think, give it sensations, ask it questions, and learn how brains work.</p>
+      <div class="btns">
+        <a class="btn primary" href="https://github.com/A-Hackers-Guide/FruitOS/releases/latest">Download the ISO</a>
+        <a class="btn ghost" href="https://github.com/A-Hackers-Guide/FruitOS">Source code</a>
+      </div>
+      <p class="small">Free and open source · Based on Arch Linux · Boots with GRUB · Works offline</p>
+    </div>
+    <div id="viewer"><canvas id="brain" aria-label="Interactive 3D view of every neuron in the fly's nervous system"></canvas>
+      <div class="cap" id="cap">loading 165,122 neurons…</div></div>
+  </section>
+
+  <section class="stats">
+    <div class="stat"><b id="s-n">165,122</b><span>neurons, every one traced from a real fly</span></div>
+    <div class="stat"><b id="s-c">25.6 million</b><span>neuron-to-neuron connections</span></div>
+    <div class="stat"><b id="s-s">124 million</b><span>synapses</span></div>
+  </section>
+
+  <section id="features">
+    <h2>What you can do</h2>
+    <div class="grid">
+      <div class="card"><h3>See the brain in 3D</h3><p>Every neuron sits where it sits in the real fly, coloured by brain part. Spin it, zoom in, and click any neuron to see what it connects to.</p></div>
+      <div class="card"><h3>The brain is in control</h3><p>Wave a shadow at the fly and nothing is scripted: looming detectors fire, the Giant Fiber fires, and the fly escapes, all from its own wiring.</p></div>
+      <div class="card"><h3>Talk to the fly</h3><p>"What are you doing?" "What is GABA?" "What happens when you smell something?" Every answer is computed from its real brain, never made up.</p></div>
+      <div class="card"><h3>Give it senses</h3><p>Smell, taste, sound, wind, touch, heat, humidity and a looming shadow, each driving a real receptor cell type.</p></div>
+      <div class="card"><h3>Guided lessons</h3><p>Nine lessons, from "what is a synapse" to the escape circuit and memory, with quizzes calculated from the brain itself.</p></div>
+      <div class="card"><h3>Gentle on your computer</h3><p>No GPU, no internet, no account. The brain uses at most half a CPU core and pauses when nobody is watching.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Inside FruitOS</h2>
+    <img class="shot" src="screenshot.jpg" alt="FruitOS app: a 3D fly brain with a status reading 'ESCAPING! (Giant Fiber firing)' after the Shadow button was pressed, and a chat panel with the fly">
+    <p class="small">The moment after pressing <b>Shadow</b>: the fly's own Giant Fiber decides to escape.</p>
+  </section>
+
+  <section id="science">
+    <h2>The science, honestly</h2>
+    <p>The brain is the <b>MaleCNS v1.0</b> connectome: the complete central nervous system of a male
+      <i>Drosophila melanogaster</i>, mapped by HHMI Janelia, Google and collaborators and published in <i>Cell</i> in 2026.
+      FruitOS runs it as a network of leaky integrate-and-fire neurons, following Shiu et al. 2024 (<i>Nature</i>).</p>
+    <p>The fly's behaviour comes only from command neurons whose jobs were shown in experiments:</p>
+    <table>
+      <tr><th>Command neuron</th><th>What the fly does</th><th>Shown by</th></tr>
+      <tr><td>DNp01 "Giant Fiber"</td><td>escape jump</td><td>von Reyn et al. 2014</td></tr>
+      <tr><td>MDN "moonwalker"</td><td>walk backward</td><td>Bidaye et al. 2014</td></tr>
+      <tr><td>DNa01, DNa02</td><td>steer left / right</td><td>Rayshubskiy et al. 2020; Yang et al. 2023</td></tr>
+      <tr><td>DNp09</td><td>walk forward</td><td>Bidaye et al. 2020</td></tr>
+    </table>
+    <p>It is a simplified model, and it says so: neuromodulators like dopamine, gap junctions, neuron shapes, a body
+      and learning are not simulated. Ask the fly "how does this simulation work?" and it will tell you exactly what
+      was changed to run this dataset.</p>
+  </section>
+
+  <section id="get">
+    <h2>Get FruitOS</h2>
+    <p>Download the latest <code>fruitos-*.iso</code> from <a href="https://github.com/A-Hackers-Guide/FruitOS/releases/latest">Releases</a>,
+      verify it with its <code>.sha256</code> file, then boot it in a virtual machine (VirtualBox, VMware, QEMU, UTM with UEFI) or write it to a USB stick.
+      Needs an x86_64 PC or VM with 4 GB RAM (8 GB recommended).</p>
+    <p>Or run just the learning app on macOS, Linux or Windows:</p>
+<pre>pip install numpy scipy pyarrow pandas
+bash tools/fetch_data.sh raw
+python3 tools/prepare_data.py --raw raw --out data
+cd app && FRUITOS_DATA=../data python3 -m fruitbrain.server   # then open http://127.0.0.1:8642</pre>
+  </section>
+
+  <footer>
+    Brain data: MaleCNS v1.0, HHMI Janelia (FlyEM), Google and collaborators, licensed
+    <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> · <a href="https://male-cns.janelia.org">male-cns.janelia.org</a>.
+    The 3D view on this page shows each neuron's position from that dataset.<br>
+    FruitOS code is MIT-licensed. 3D rendering by three.js (MIT). FruitOS is not affiliated with Arch Linux, HHMI Janelia or Google.
+  </footer>
+</div>
+
+<script type="module">
+import * as THREE from "three";
+import { OrbitControls } from "./vendor/OrbitControls.js";
+const GROUPS = [
+  [(s) => s.startsWith("ol_") || s.startsWith("visual"), "#4c8dff"], [(s) => s.startsWith("cb_intrinsic"), "#b07cff"],
+  [(s) => s.startsWith("vnc_intrinsic"), "#3ecf8e"], [(s) => s.includes("sensory"), "#ffd166"],
+  [(s) => s.startsWith("descending"), "#ff6b4a"], [(s) => s.startsWith("ascending"), "#2ec4d6"], [() => true, "#9aa3b5"]];
+const fmt = (n) => n >= 1e6 ? `${(n / 1e6).toFixed(1)} million` : n.toLocaleString();
+const meta = await (await fetch("brain-meta.json")).json();
+document.getElementById("s-n").textContent = meta.n.toLocaleString();
+document.getElementById("s-c").textContent = fmt(meta.connections);
+document.getElementById("s-s").textContent = fmt(meta.synapses);
+const buf = await (await fetch("brain-points.bin")).arrayBuffer();
+const N = meta.n, q = new Int16Array(buf, 0, N * 3), sc = new Uint8Array(buf, N * 6, N);
+const pos = new Float32Array(N * 3), col = new Float32Array(N * 3), c = new THREE.Color();
+for (let i = 0; i < N; i++) {
+  pos[3 * i] = q[3 * i] / 32767; pos[3 * i + 1] = -q[3 * i + 1] / 32767; pos[3 * i + 2] = -q[3 * i + 2] / 32767;
+  c.set(GROUPS.find(([t]) => t(meta.superclass[sc[i]]))[1]); col.set([c.r, c.g, c.b], 3 * i);
+}
+const canvas = document.getElementById("brain");
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+const scene = new THREE.Scene(), camera = new THREE.PerspectiveCamera(45, 1, 0.01, 50);
+camera.position.set(0, -0.1, 1.55);
+const controls = new OrbitControls(camera, canvas);
+controls.enableDamping = true; controls.autoRotate = true; controls.autoRotateSpeed = 0.8; controls.enableZoom = false;
+const g = new THREE.BufferGeometry();
+g.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+g.setAttribute("color", new THREE.BufferAttribute(col, 3));
+scene.add(new THREE.Points(g, new THREE.PointsMaterial({ size: 0.006, vertexColors: true, transparent: true, opacity: 0.7,
+  blending: THREE.AdditiveBlending, depthWrite: false })));
+const resize = () => { const r = canvas.parentElement.getBoundingClientRect(); renderer.setSize(r.width, r.height, false); camera.aspect = r.width / r.height; camera.updateProjectionMatrix(); };
+addEventListener("resize", resize); resize();
+canvas.addEventListener("pointerdown", () => (controls.autoRotate = false));
+document.getElementById("cap").textContent = `every dot is one of ${N.toLocaleString()} real neurons · drag to spin`;
+(function loop() { requestAnimationFrame(loop); controls.update(); renderer.render(scene, camera); })();
+</script>
+</body>
+</html>

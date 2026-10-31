@@ -8,6 +8,8 @@ take guided lessons.
 
 Made for doctors, anthropologists, students and anyone curious about how brains work.
 
+**Website:** https://a-hackers-guide.github.io/FruitOS/ (spin all 165,122 neurons in your browser)
+
 - Based on **Arch Linux** (archiso), boots with **GRUB** (UEFI; legacy-BIOS PCs fall back to syslinux)
 - Fully **offline**: no account, no internet, no AI service
 - Built ISOs are published only as **[Releases](../../releases)**; this repository holds source code only
@@ -91,7 +93,8 @@ app/web/          3D learning interface (three.js, vendored, works offline)
 tools/            download + convert the connectome (build time only)
 iso/              archiso profile: packages, GRUB/syslinux branding, systemd service, kiosk session
 tests/            engine tests on a tiny synthetic brain
-.github/workflows check.yml (tests on every push) · release.yml (tag v* → build ISO → GitHub Release)
+site/             the GitHub Pages website
+.github/workflows check.yml (tests) · release.yml (tag v* → ISO → Release) · pages.yml (website)
 ```
 
 ## Releasing
