@@ -41,6 +41,8 @@ know what they do.
 **FruitOS ISO:** download the latest `fruitos-*.iso` from [Releases](../../releases), check it with
 `sha256sum -c`, then boot it in a VM (VirtualBox, VMware, QEMU, UTM, with UEFI enabled) or write it to a USB stick.
 
+On a real PC, turn **Secure Boot off** in the firmware settings first (FruitOS's boot files aren't signed for Secure Boot).
+
 | | Minimum | Recommended |
 |---|---|---|
 | CPU | x86_64, 2 cores | 4 cores |
