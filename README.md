@@ -1,5 +1,8 @@
 # FruitOS
 
+[![Download FruitOS](https://img.shields.io/sourceforge/dt/fruitos.svg?label=SourceForge%20downloads)](https://sourceforge.net/projects/fruitos/files/latest/download) [![Download FruitOS](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/fruitos/files/latest/download)
+
+
 **A live Linux system whose star is a real fruit fly brain.** FruitOS boots straight into a 3D learning
 app that runs the complete wiring diagram of a male fruit fly's central nervous system as a live simulation:
 **165,122 neurons, 25.6 million connections, 124 million synapses.** The fly's brain is in control: what the
